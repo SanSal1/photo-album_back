@@ -1,15 +1,12 @@
-import express from 'express';
-import dotenv from 'dotenv';
+const config = require('./src/configs/env.conf');
+const app = require('./app');
+const dbService = require('./src/services/db.service');
 
-dotenv.config();
+const start = async () => {
+  await dbService.connect();
+  app.listen(config.PORT, () => {
+    console.log(`Server is running at port ${config.PORT}`);
+  });
+};
 
-const app = express();
-const port = process.env.PORT;
-
-app.get('/', (_req, res) => {
-  res.send('Home');
-});
-
-app.listen(port, () => {
-  console.log(`Server is running at port ${port}`);
-});
+start();

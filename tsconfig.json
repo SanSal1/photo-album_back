@@ -6,7 +6,7 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true,
-    "target": "es6",
+    "target": "es2017",
     "esModuleInterop": true,
     "sourceMap": true,
     "outDir": "./dist",
@@ -17,7 +17,9 @@
     "noImplicitAny": false,
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
-    "noFallthroughCasesInSwitch": false
+    "noFallthroughCasesInSwitch": false,
+    "moduleDetection": "force",
+    "types": ["node", "jest", "express"]
   },
   "exclude": ["node_modules", "dist"]
 }
