@@ -1,8 +1,8 @@
 import { Request, Response, NextFunction } from 'express';
 import { sign } from 'jsonwebtoken';
 import { compare } from 'bcrypt';
-import { getByEmail } from '../services/user.service';
-import { JWT_EXPIRES_IN } from 'src/configs/env.conf';
+import { getByEmail } from '../services/login.service';
+import { JWT_EXPIRES_IN } from '../configs/env.conf';
 
 export async function postCredentials(req: Request, res: Response, next: NextFunction) {
   try {

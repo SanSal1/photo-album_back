@@ -8,7 +8,7 @@ export const getAll = async () => {
   return users;
 };
 
-export const getById = async (id) => {
+export const getById = async (id: string) => {
   const user = await User.findByPk(id, {
     attributes: { exclude: ['password'] },
   });
@@ -18,12 +18,7 @@ export const getById = async (id) => {
   return user;
 };
 
-export const getByEmail = async (email) => {
-  const user = await User.findOne({ where: { email } });
-  return user;
-};
-
-export const create = async (user) => {
+export const create = async (user: User) => {
   const emailIsTaken = await User.findOne({ where: { email: user.email } });
   if (emailIsTaken) {
     throw { message: `Email ${user.email} is already in use.`, code: 400 };
