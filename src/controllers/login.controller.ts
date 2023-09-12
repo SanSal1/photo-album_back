@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import { sign } from 'jsonwebtoken';
 import { compare } from 'bcrypt';
 import { getByEmail } from '../services/user.service';
+import { JWT_EXPIRES_IN } from 'src/configs/env.conf';
 
 export async function postCredentials(req: Request, res: Response, next: NextFunction) {
   try {
@@ -19,7 +20,7 @@ export async function postCredentials(req: Request, res: Response, next: NextFun
       id: user.id,
     };
 
-    const token = sign(userForToken, process.env.SECRET);
+    const token = sign(userForToken, process.env.SECRET, { expiresIn: JWT_EXPIRES_IN });
 
     res.status(200).send({
       token,
