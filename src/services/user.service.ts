@@ -1,16 +1,14 @@
 import { hash } from 'bcrypt';
-const db = require('../models/db.model');
+import { User } from '../models/db.model';
 
-const User = db.User;
-
-const getAll = async () => {
+export const getAll = async () => {
   const users = await User.findAll({
     attributes: { exclude: ['password'] },
   });
   return users;
 };
 
-const getById = async (id) => {
+export const getById = async (id) => {
   const user = await User.findByPk(id, {
     attributes: { exclude: ['password'] },
   });
@@ -20,12 +18,12 @@ const getById = async (id) => {
   return user;
 };
 
-const getByEmail = async (email) => {
+export const getByEmail = async (email) => {
   const user = await User.findOne({ where: { email } });
   return user;
 };
 
-const create = async (user) => {
+export const create = async (user) => {
   const emailIsTaken = await User.findOne({ where: { email: user.email } });
   if (emailIsTaken) {
     throw { message: `Email ${user.email} is already in use.`, code: 400 };
@@ -34,11 +32,4 @@ const create = async (user) => {
   const newUser = await User.create({ password: passwordHash, email: user.email });
   delete newUser.dataValues['password'];
   return newUser;
-};
-
-module.exports = {
-  create,
-  getAll,
-  getById,
-  getByEmail,
 };

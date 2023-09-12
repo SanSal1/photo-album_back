@@ -1,7 +1,7 @@
 import { Sequelize } from 'sequelize';
-const config = require('../configs/env.conf');
+import { DATABASE_URL } from '../configs/env.conf';
 
-const sequelize = new Sequelize(config.DATABASE_URL, {
+export const sequelize = new Sequelize(DATABASE_URL, {
   dialectOptions: {
     ssl: {
       require: true,
@@ -10,7 +10,7 @@ const sequelize = new Sequelize(config.DATABASE_URL, {
   },
 });
 
-const connect = async () => {
+export const connect = async () => {
   // TODO
   try {
     await sequelize.authenticate();
@@ -21,5 +21,3 @@ const connect = async () => {
   }
   return null;
 };
-
-module.exports = { connect, sequelize };

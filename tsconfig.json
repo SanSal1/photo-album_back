@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "module": "commonjs",
+    "module": "NodeNext",
     "declaration": true,
     "removeComments": true,
     "emitDecoratorMetadata": true,
@@ -17,9 +17,7 @@
     "noImplicitAny": false,
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
-    "noFallthroughCasesInSwitch": false,
-    "moduleDetection": "force",
-    "types": ["node", "jest", "express"]
+    "noFallthroughCasesInSwitch": false
   },
   "exclude": ["node_modules", "dist"]
 }

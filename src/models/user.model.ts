@@ -1,7 +1,14 @@
-const { Model, DataTypes } = require('sequelize');
-const db = require('../services/db.service');
+import { Model, DataTypes } from 'sequelize';
+import { sequelize } from '../services/db.service';
 
-Model.init(
+class User extends Model {
+  declare id: number;
+  declare email: string;
+  declare password: string;
+  declare isAdmin: boolean;
+}
+
+User.init(
   {
     id: {
       type: DataTypes.INTEGER,
@@ -22,10 +29,10 @@ Model.init(
     },
   },
   {
-    sequelize: db.sequelize,
+    sequelize,
     timestamps: true,
     modelName: 'user',
   }
 );
 
-module.exports = Model;
+export default User;

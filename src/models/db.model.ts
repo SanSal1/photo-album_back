@@ -1,7 +1,5 @@
-const User = require('./user.model');
+import User from './user.model';
 
 User.sync({ alter: true });
 
-module.exports = {
-  User,
-};
+export { User };

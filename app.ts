@@ -1,8 +1,8 @@
 import express, { Express, Request, Response } from 'express';
-const errorHandler = require('./src/middlewares/errorHandler');
-const auth = require('./src/middlewares/auth');
-const loginRouter = require('./src/routes/login.route');
-const userRouter = require('./src/routes/user.route');
+import errorHandler from './src/middlewares/errorHandler';
+import auth from './src/middlewares/auth';
+import loginRouter from './src/routes/login.route';
+import userRouter from './src/routes/user.route';
 
 const app: Express = express();
 
@@ -18,4 +18,4 @@ app.use(auth);
 app.use('/api/users', userRouter);
 app.use(errorHandler);
 
-module.exports = app;
+export default app;

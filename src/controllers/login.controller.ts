@@ -1,13 +1,13 @@
 import { Request, Response, NextFunction } from 'express';
 import { sign } from 'jsonwebtoken';
 import { compare } from 'bcrypt';
-const userService = require('../services/user.service');
+import { getByEmail } from '../services/user.service';
 
-async function post(req: Request, res: Response, next: NextFunction) {
+export async function postCredentials(req: Request, res: Response, next: NextFunction) {
   try {
     const body = req.body;
 
-    const user = await userService.getByEmail(body.email);
+    const user = await getByEmail(body.email);
     const passwordCorrect = user === null ? false : await compare(body.password, user.password);
 
     if (!(user && passwordCorrect)) {
@@ -30,5 +30,3 @@ async function post(req: Request, res: Response, next: NextFunction) {
     next(err);
   }
 }
-
-module.exports = { post };

@@ -10,4 +10,4 @@ const errorHandler = (err: { message: string; code: number }, _req: Request, res
   next();
 };
 
-module.exports = errorHandler;
+export default errorHandler;
