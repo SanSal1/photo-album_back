@@ -3,6 +3,7 @@ import { sign } from 'jsonwebtoken';
 import { compare } from 'bcrypt';
 import { getByEmail } from '../services/login.service';
 import { JWT_EXPIRES_IN } from '../configs/env.conf';
+import { JwtUser } from 'src/types/CRequest';
 
 export async function postCredentials(req: Request, res: Response, next: NextFunction) {
   try {
@@ -15,8 +16,7 @@ export async function postCredentials(req: Request, res: Response, next: NextFun
       return res.status(401).send('Invalid email or password');
     }
 
-    const userForToken = {
-      email: user.email,
+    const userForToken: JwtUser = {
       id: user.id,
     };
 

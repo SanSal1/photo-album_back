@@ -1,11 +1,12 @@
 import { Model, DataTypes } from 'sequelize';
 import { sequelize } from '../services/db.service';
+import Role from '../types/Role';
 
 class User extends Model {
   declare id: number;
   declare email: string;
   declare password: string;
-  declare isAdmin: boolean;
+  declare role: Role;
 }
 
 User.init(
@@ -24,9 +25,11 @@ User.init(
       type: DataTypes.STRING,
       allowNull: false,
     },
-    isAdmin: {
-      type: DataTypes.BOOLEAN,
-      defaultValue: false,
+    role: {
+      type: DataTypes.ENUM({
+        values: [Role.Basic, Role.Admin],
+      }),
+      defaultValue: Role.Basic,
     },
   },
   {

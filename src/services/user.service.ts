@@ -28,3 +28,11 @@ export const create = async (user: User) => {
   delete newUser.dataValues['password'];
   return newUser;
 };
+
+export const destroy = async (id: string) => {
+  const success = await User.destroy({ where: { id } });
+  if (!success) {
+    throw { message: `User with ID ${id} not found.`, code: 404 };
+  }
+  return { success };
+};
