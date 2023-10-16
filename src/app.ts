@@ -1,7 +1,7 @@
 import express, { Express, Request, Response } from 'express';
-import errorHandler from './src/middlewares/errorHandler';
-import loginRouter from './src/routes/login.route';
-import userRouter from './src/routes/user.route';
+import errorHandler from './middlewares/errorHandler';
+import loginRouter from './routes/login.route';
+import userRouter from './routes/user.route';
 
 const app: Express = express();
 

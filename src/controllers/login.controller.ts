@@ -25,6 +25,7 @@ export async function postCredentials(req: Request, res: Response, next: NextFun
     res.status(200).send({
       token,
       id: user.id,
+      name: user.name,
       email: user.email,
     });
   } catch (err) {

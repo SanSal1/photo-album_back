@@ -1,5 +1,5 @@
 import { PORT } from './src/configs/env.conf';
-import app from './app';
+import app from './src/app';
 import { connect } from './src/services/db.service';
 
 const start = async () => {

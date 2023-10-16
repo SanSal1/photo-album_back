@@ -19,12 +19,15 @@ export const getById = async (id: string) => {
 };
 
 export const create = async (user: User) => {
+  if (!user.email || !/\S+@\S+\.\S+/.test(user.email)) {
+    throw { message: `Provide a valide email.`, code: 400 };
+  }
   const emailIsTaken = await User.findOne({ where: { email: user.email } });
   if (emailIsTaken) {
     throw { message: `Email ${user.email} is already in use.`, code: 400 };
   }
   const passwordHash = await hash(user.password, 10);
-  const newUser = await User.create({ password: passwordHash, email: user.email });
+  const newUser = await User.create({ password: passwordHash, email: user.email, name: user.name });
   delete newUser.dataValues['password'];
   return newUser;
 };

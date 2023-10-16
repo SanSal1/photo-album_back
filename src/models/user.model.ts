@@ -4,6 +4,7 @@ import Role from '../types/Role';
 
 class User extends Model {
   declare id: number;
+  declare name: string;
   declare email: string;
   declare password: string;
   declare role: Role;
@@ -15,6 +16,10 @@ User.init(
       type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: true,
+    },
+    name: {
+      type: DataTypes.STRING,
+      allowNull: false,
     },
     email: {
       type: DataTypes.STRING(64),
