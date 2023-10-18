@@ -37,5 +37,5 @@ export const destroy = async (id: string) => {
   if (!success) {
     throw { message: `User with ID ${id} not found.`, code: 404 };
   }
-  return { success };
+  return success;
 };

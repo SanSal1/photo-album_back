@@ -1,5 +1,10 @@
+import Album from './album.model';
 import User from './user.model';
 
-User.sync({ alter: true });
+User.hasMany(Album);
+Album.belongsTo(User);
 
-export { User };
+User.sync({ alter: true });
+Album.sync({ alter: true });
+
+export { User, Album };
