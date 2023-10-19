@@ -1,10 +1,12 @@
 import { Response, NextFunction } from 'express';
 import { CRequest } from 'src/types/CRequest';
 import { getAll, getById, create, update, destroy } from '../services/album.service';
+import { AlbumGetRequest } from 'src/types/AlbumGetRequest';
 
-export async function getAlbums(req: CRequest, res: Response, next: NextFunction) {
+export async function getAlbums(req: AlbumGetRequest, res: Response, next: NextFunction) {
   try {
-    const albums = await getAll(req.user?.id);
+    console.log(req.query, '******************************');
+    const albums = await getAll(req.query, req.user?.id);
     res.status(200).json(albums);
   } catch (err) {
     next(err);

@@ -1,17 +1,31 @@
 import { Op } from 'sequelize';
-import { Album } from '../models/db.model';
+import { Album, User } from '../models/db.model';
+import { AlbumGetRequest } from 'src/types/AlbumGetRequest';
 
-export const getAll = async (userId?: number) => {
-  const options = userId ? { where: { [Op.or]: [{ private: false }, { userId }] } } : { where: { private: false } };
-  const albums = await Album.findAll(options);
+export const getAll = async (query: AlbumGetRequest['query'], userId?: number) => {
+  const privateOptions = userId ? { [Op.or]: [{ private: false }, { userId }] } : { private: false };
+  const userIdOptions = query.userId ? { userId: query.userId } : {};
+  const albums = await Album.findAll({
+    attributes: { exclude: ['userId'] },
+    include: {
+      model: User,
+      attributes: ['id', 'name'],
+    },
+    where: { ...privateOptions, ...userIdOptions },
+  });
   return albums;
 };
 
 export const getById = async (id: string, userId?: number) => {
-  const options = userId
-    ? { where: { id, [Op.or]: [{ private: false }, { userId }] } }
-    : { where: { id, private: false } };
-  const album = await Album.findOne(options);
+  const privateOptions = userId ? { id, [Op.or]: [{ private: false }, { userId }] } : { id, private: false };
+  const album = await Album.findOne({
+    attributes: { exclude: ['userId'] },
+    include: {
+      model: User,
+      attributes: ['id', 'name'],
+    },
+    where: privateOptions,
+  });
   if (!album) {
     throw { message: `Album with ID ${id} not found.`, code: 404 };
   }
