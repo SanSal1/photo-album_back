@@ -5,7 +5,6 @@ import { AlbumGetRequest } from 'src/types/AlbumGetRequest';
 
 export async function getAlbums(req: AlbumGetRequest, res: Response, next: NextFunction) {
   try {
-    console.log(req.query, '******************************');
     const albums = await getAll(req.query, req.user?.id);
     res.status(200).json(albums);
   } catch (err) {
