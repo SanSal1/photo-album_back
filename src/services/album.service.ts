@@ -1,6 +1,6 @@
 import { Op } from 'sequelize';
 import { Album, User } from '../models/db.model';
-import { AlbumGetRequest } from 'src/types/AlbumGetRequest';
+import { AlbumGetRequest } from '../types/AlbumGetRequest';
 
 export const getAll = async (query: AlbumGetRequest['query'], userId?: number) => {
   const privateOptions = userId ? { [Op.or]: [{ private: false }, { userId }] } : { private: false };
