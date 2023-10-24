@@ -3,8 +3,7 @@ import { sequelize } from '../services/db.service';
 
 class CFile extends Model {
   declare id: number;
-  declare originalname: string;
-  declare filename: string;
+  declare name: string;
   declare userId: number;
 }
 
@@ -15,11 +14,7 @@ CFile.init(
       primaryKey: true,
       autoIncrement: true,
     },
-    originalname: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    filename: {
+    name: {
       type: DataTypes.STRING,
       allowNull: false,
       unique: true,

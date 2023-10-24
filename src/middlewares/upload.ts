@@ -12,8 +12,9 @@ const validateFileType = function (file: Express.Multer.File, cb: FileFilterCall
   }
 };
 
+// TODO: Temporarily store images to this folder in development
 const storageEngine = diskStorage({
-  destination: './images', // TODO: Save locally for now
+  destination: './images',
   filename: (_req, file, cb) => {
     cb(null, `${Date.now()}-${file.originalname}`);
   },

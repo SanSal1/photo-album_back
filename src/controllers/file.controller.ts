@@ -1,11 +1,14 @@
 import { Response, NextFunction } from 'express';
 import { create, getById } from '../services/file.service';
 import { CRequest } from '../types/CRequest';
+import { join } from 'path';
 
 export async function getFile(req: CRequest, res: Response, next: NextFunction) {
   try {
-    const file = await getById(req.params.id, req.user?.id);
-    res.status(200).json(file);
+    const fileDb = await getById(req.params.id, req.user?.id);
+    const rootDir = join(__dirname.split('dist')[0], 'images'); // TODO: Temporarily store images to this folder in development
+    const options = { root: rootDir };
+    res.sendFile(fileDb.name, options);
   } catch (err) {
     next(err);
   }
