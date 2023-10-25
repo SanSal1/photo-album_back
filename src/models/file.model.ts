@@ -4,6 +4,7 @@ import { sequelize } from '../services/db.service';
 class CFile extends Model {
   declare id: number;
   declare name: string;
+  declare private: boolean;
   declare userId: number;
 }
 
@@ -18,6 +19,10 @@ CFile.init(
       type: DataTypes.STRING,
       allowNull: false,
       unique: true,
+    },
+    private: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
     },
     userId: {
       type: DataTypes.INTEGER,
