@@ -1,5 +1,5 @@
 import { Op } from 'sequelize';
-import { Album, User } from '../models/db.model';
+import { Album, CFile, User } from '../models/db.model';
 import { AlbumGetRequest } from '../types/AlbumGetRequest';
 
 export const getAll = async (query: AlbumGetRequest['query'], userId?: number) => {
@@ -7,24 +7,43 @@ export const getAll = async (query: AlbumGetRequest['query'], userId?: number) =
   const userIdOptions = query.userId ? { userId: query.userId } : {};
   const albums = await Album.findAll({
     attributes: { exclude: ['userId'] },
-    include: {
-      model: User,
-      attributes: ['id', 'name'],
-    },
+    include: [
+      {
+        model: User,
+        attributes: ['id', 'name'],
+      },
+      {
+        model: CFile,
+        attributes: ['id', 'name'],
+        through: { attributes: [] },
+      },
+    ],
     where: { ...privacyOptions, ...userIdOptions },
   });
   return albums;
 };
 
-export const getById = async (id: string, userId?: number) => {
+export const getById = async (id: string, userId?: number, showRelations = true) => {
   const privacyOptions = userId ? { id, [Op.or]: [{ private: false }, { userId }] } : { id, private: false };
+  const includeOptions = showRelations
+    ? {
+        attributes: { exclude: ['userId'] },
+        include: [
+          {
+            model: User,
+            attributes: ['id', 'name'],
+          },
+          {
+            model: CFile,
+            attributes: ['id', 'name'],
+            through: { attributes: [] },
+          },
+        ],
+      }
+    : {};
   const album = await Album.findOne({
-    attributes: { exclude: ['userId'] },
-    include: {
-      model: User,
-      attributes: ['id', 'name'],
-    },
     where: privacyOptions,
+    ...includeOptions,
   });
   if (!album) {
     throw { message: `Album with ID ${id} not found.`, code: 404 };

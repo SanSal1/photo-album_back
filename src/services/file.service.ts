@@ -2,16 +2,26 @@ import { Op } from 'sequelize';
 import { CFile, User } from '../models/db.model';
 import { FileGetRequest } from '../types/FileGetRequest';
 
-export const getAll = async (query: FileGetRequest['query'], userId?: number) => {
-  const privacyOptions = userId ? { [Op.or]: [{ private: false }, { userId }] } : { private: false };
+export const getAll = async (query: FileGetRequest['query'], userId?: number, showRelations = true) => {
+  let privacyOptions: object = { private: false };
+  const includeOptions = showRelations
+    ? {
+        attributes: { exclude: ['userId'] },
+        include: {
+          model: User,
+          attributes: ['id', 'name'],
+        },
+      }
+    : {};
+  if (query.private === 'true') {
+    privacyOptions = { private: true, userId };
+  } else if (userId && query.private !== 'false') {
+    privacyOptions = { [Op.or]: [{ private: false }, { userId }] };
+  }
   const userIdOptions = query.userId ? { userId: query.userId } : {};
   const files = await CFile.findAll({
-    attributes: { exclude: ['userId'] },
-    include: {
-      model: User,
-      attributes: ['id', 'name'],
-    },
     where: { ...privacyOptions, ...userIdOptions },
+    ...includeOptions,
   });
   return files;
 };

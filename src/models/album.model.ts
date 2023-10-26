@@ -6,7 +6,6 @@ class Album extends Model {
   declare name: string;
   declare private: boolean;
   declare userId: number;
-  // declare images: Array<T>;
 }
 
 Album.init(
