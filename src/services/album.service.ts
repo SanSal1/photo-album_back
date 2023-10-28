@@ -35,7 +35,7 @@ export const getById = async (id: string, userId?: number, showRelations = true)
           },
           {
             model: CFile,
-            attributes: ['id', 'name'],
+            attributes: ['id', 'name', 'private'],
             through: { attributes: [] },
           },
         ],

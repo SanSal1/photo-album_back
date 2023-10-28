@@ -1,5 +1,6 @@
 import { Response, NextFunction } from 'express';
 import { CRequest } from '../types/CRequest';
+import { AlbumRes } from '../types/AlbumRes';
 import { AlbumGetRequest } from '../types/AlbumGetRequest';
 import { CFile } from '../models/db.model';
 import { getAll as getAllAlbums, getById, create, update, destroy as destroyAlbum } from '../services/album.service';
@@ -33,10 +34,16 @@ export async function postAlbum(req: CRequest, res: Response, next: NextFunction
   }
 }
 
-export async function putAlbum(req: CRequest, res: Response, next: NextFunction) {
+export async function patchAlbum(req: CRequest, res: Response, next: NextFunction) {
   try {
-    const album = await update(req.params.id, req.body, req.user?.id);
-    res.status(201).json(album);
+    if (req.body?.private === false || req.body?.private === 'false' || req.body?.private === 0) {
+      const album = (await getById(req.params.id, req.user?.id)) as unknown as AlbumRes;
+      if (album.private !== false && album.files.find((file) => file.private === true)) {
+        throw { message: 'Album cannot be made public if it includes private files', code: 400 };
+      }
+    }
+    const newAlbum = await update(req.params.id, req.body, req.user?.id);
+    res.status(201).json(newAlbum);
   } catch (err) {
     next(err);
   }
@@ -56,7 +63,7 @@ export async function postAlbumFiles(req: CRequest, res: Response, next: NextFun
     // Validate privacy settings
     const album = await getById(req.params.id, req.user?.id, false);
     if (album.userId !== req.user?.id) {
-      throw { message: `Forbidden`, code: 403 };
+      throw { message: 'Forbidden', code: 403 };
     }
     const files = await getAllFiles(
       { userId: req.user?.id.toString(), private: album.private ? undefined : 'false' },
@@ -81,7 +88,7 @@ export async function deleteAlbumFiles(req: CRequest, res: Response, next: NextF
   try {
     const album = await getById(req.params.albumId, req.user?.id, false);
     if (album.userId !== req.user?.id) {
-      throw { message: `Forbidden`, code: 403 };
+      throw { message: 'Forbidden', code: 403 };
     }
     const success = await destroyAlbumFile(req.params.albumId, req.params.fileId);
     res.status(200).json(success);

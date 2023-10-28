@@ -3,7 +3,7 @@ import {
   getAlbums,
   getAlbum,
   postAlbum,
-  putAlbum,
+  patchAlbum,
   deleteAlbum,
   postAlbumFiles,
   deleteAlbumFiles,
@@ -15,7 +15,7 @@ const router = Router();
 router.get('/', validateToken(true), getAlbums);
 router.get('/:id', validateToken(true), getAlbum);
 router.post('/', validateToken(), postAlbum);
-router.put('/:id', validateToken(), putAlbum);
+router.patch('/:id', validateToken(), patchAlbum);
 router.delete('/:id', validateToken(), deleteAlbum);
 router.post('/:id/files', validateToken(), postAlbumFiles);
 router.delete('/:albumId/files/:fileId', validateToken(), deleteAlbumFiles);
