@@ -4,8 +4,10 @@ import { sequelize } from '../services/db.service';
 class CFile extends Model {
   declare id: number;
   declare name: string;
+  declare storageKey: string;
   declare private: boolean;
   declare userId: number;
+  declare url?: string;
 }
 
 CFile.init(
@@ -19,7 +21,7 @@ CFile.init(
       type: DataTypes.STRING,
       allowNull: false,
     },
-    s3Key: {
+    storageKey: {
       type: DataTypes.STRING,
       allowNull: false,
       unique: true,

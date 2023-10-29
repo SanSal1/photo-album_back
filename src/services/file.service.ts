@@ -35,8 +35,13 @@ export const getById = async (id: string, userId?: number) => {
   return file;
 };
 
-export const create = async (body: { private: boolean; originalName: string; s3Key: string }, userId?: number) => {
-  const newFile = await CFile.create({ userId, name: body.originalName, s3Key: body.s3Key, private: body.private });
-  delete newFile.dataValues['s3Key'];
+export const create = async (body: { private: boolean; originalName: string; storageKey: string }, userId?: number) => {
+  const newFile = await CFile.create({
+    userId,
+    name: body.originalName,
+    storageKey: body.storageKey,
+    private: body.private,
+  });
+  delete newFile.dataValues['storageKey'];
   return newFile;
 };

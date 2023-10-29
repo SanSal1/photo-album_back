@@ -1,16 +1,25 @@
 import { Response, NextFunction } from 'express';
-import { PutObjectCommand } from '@aws-sdk/client-s3';
+import { PutObjectCommand, GetObjectCommand } from '@aws-sdk/client-s3';
+import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { randomBytes } from 'crypto';
-import { join } from 'path';
 import { BUCKET_NAME } from '../configs/env.conf';
 import { create, getById, getAll } from '../services/file.service';
 import s3Client from '../services/s3Client.service';
 import { CRequest } from '../types/CRequest';
 
-export async function getFilesData(req: CRequest, res: Response, next: NextFunction) {
+export async function getFiles(req: CRequest, res: Response, next: NextFunction) {
   try {
-    const filesData = await getAll(req.query, req.user?.id);
-    res.status(200).json(filesData);
+    const files = await getAll(req.query, req.user?.id);
+    for (const file of files) {
+      const command = new GetObjectCommand({
+        Bucket: BUCKET_NAME,
+        Key: file.storageKey,
+      });
+      const url = await getSignedUrl(s3Client, command, { expiresIn: 3600 });
+      file.dataValues.url = url;
+      delete file.dataValues['storageKey'];
+    }
+    res.status(200).json(files);
   } catch (err) {
     next(err);
   }
@@ -19,8 +28,13 @@ export async function getFilesData(req: CRequest, res: Response, next: NextFunct
 export async function getFile(req: CRequest, res: Response, next: NextFunction) {
   try {
     const file = await getById(req.params.id, req.user?.id);
-    const root = join(__dirname.split('dist')[0], 'images'); // TODO: Temporarily store images to this folder in development
-    res.sendFile(file.name, { root });
+    const command = new GetObjectCommand({
+      Bucket: BUCKET_NAME,
+      Key: file.storageKey,
+    });
+    const url = await getSignedUrl(s3Client, command, { expiresIn: 3600 });
+    delete file.dataValues['storageKey'];
+    res.status(200).json({ url, ...file.dataValues });
   } catch (err) {
     next(err);
   }
@@ -28,7 +42,7 @@ export async function getFile(req: CRequest, res: Response, next: NextFunction) 
 
 export async function postFile(req: CRequest, res: Response, next: NextFunction) {
   try {
-    const fileKey = randomBytes(32).toString('hex');
+    const fileKey = `${randomBytes(28).toString('hex')}-${req.file.originalname}`;
     const command = new PutObjectCommand({
       Bucket: BUCKET_NAME,
       Key: fileKey,
@@ -37,9 +51,10 @@ export async function postFile(req: CRequest, res: Response, next: NextFunction)
     });
     await s3Client.send(command);
     const file = await create(
-      { originalName: req.file.originalname, s3Key: fileKey, private: req.body.private },
+      { originalName: req.file.originalname, storageKey: fileKey, private: req.body.private },
       req.user?.id
     );
+    delete file.dataValues['storageKey'];
     res.status(201).json(file);
   } catch (err) {
     next(err);
