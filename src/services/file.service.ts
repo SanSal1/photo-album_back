@@ -45,3 +45,11 @@ export const create = async (body: { private: boolean; originalName: string; sto
   delete newFile.dataValues['storageKey'];
   return newFile;
 };
+
+export const destroy = async (id: string, userId?: number) => {
+  const success = await CFile.destroy({ where: { id, userId } });
+  if (!success) {
+    throw { message: `File with ID ${id} not found.`, code: 404 };
+  }
+  return success;
+};

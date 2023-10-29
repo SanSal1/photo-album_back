@@ -1,9 +1,9 @@
 import { Response, NextFunction } from 'express';
-import { PutObjectCommand, GetObjectCommand } from '@aws-sdk/client-s3';
+import { GetObjectCommand, PutObjectCommand, DeleteObjectCommand } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { randomBytes } from 'crypto';
 import { BUCKET_NAME } from '../configs/env.conf';
-import { create, getById, getAll } from '../services/file.service';
+import { create, getById, getAll, destroy } from '../services/file.service';
 import s3Client from '../services/s3Client.service';
 import { CRequest } from '../types/CRequest';
 
@@ -56,6 +56,21 @@ export async function postFile(req: CRequest, res: Response, next: NextFunction)
     );
     delete file.dataValues['storageKey'];
     res.status(201).json(file);
+  } catch (err) {
+    next(err);
+  }
+}
+
+export async function deleteFile(req: CRequest, res: Response, next: NextFunction) {
+  try {
+    const file = await getById(req.params.id, req.user?.id);
+    const command = new DeleteObjectCommand({
+      Bucket: BUCKET_NAME,
+      Key: file.storageKey,
+    });
+    await s3Client.send(command);
+    const success = await destroy(req.params.id, req.user?.id);
+    res.status(200).json(success);
   } catch (err) {
     next(err);
   }
