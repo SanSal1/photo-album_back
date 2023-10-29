@@ -18,6 +18,10 @@ CFile.init(
     name: {
       type: DataTypes.STRING,
       allowNull: false,
+    },
+    s3Key: {
+      type: DataTypes.STRING,
+      allowNull: false,
       unique: true,
     },
     private: {

@@ -1,7 +1,11 @@
 import { Response, NextFunction } from 'express';
-import { create, getById, getAll } from '../services/file.service';
-import { CRequest } from '../types/CRequest';
+import { PutObjectCommand } from '@aws-sdk/client-s3';
+import { randomBytes } from 'crypto';
 import { join } from 'path';
+import { BUCKET_NAME } from '../configs/env.conf';
+import { create, getById, getAll } from '../services/file.service';
+import s3Client from '../services/s3Client.service';
+import { CRequest } from '../types/CRequest';
 
 export async function getFilesData(req: CRequest, res: Response, next: NextFunction) {
   try {
@@ -24,7 +28,18 @@ export async function getFile(req: CRequest, res: Response, next: NextFunction) 
 
 export async function postFile(req: CRequest, res: Response, next: NextFunction) {
   try {
-    const file = await create(req.file, req.body, req.user?.id);
+    const fileKey = randomBytes(32).toString('hex');
+    const command = new PutObjectCommand({
+      Bucket: BUCKET_NAME,
+      Key: fileKey,
+      Body: req.file.buffer,
+      ContentType: req.file.mimetype,
+    });
+    await s3Client.send(command);
+    const file = await create(
+      { originalName: req.file.originalname, s3Key: fileKey, private: req.body.private },
+      req.user?.id
+    );
     res.status(201).json(file);
   } catch (err) {
     next(err);

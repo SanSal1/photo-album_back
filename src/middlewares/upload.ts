@@ -1,4 +1,4 @@
-import multer, { diskStorage, FileFilterCallback } from 'multer';
+import multer, { memoryStorage, FileFilterCallback } from 'multer';
 import path from 'path';
 
 const fileFilter = function (req: { body: { private: unknown } }, file: Express.Multer.File, cb: FileFilterCallback) {
@@ -18,16 +18,10 @@ const fileFilter = function (req: { body: { private: unknown } }, file: Express.
   }
 };
 
-// TODO: Temporarily store images to this folder in development
-const storageEngine = diskStorage({
-  destination: './images',
-  filename: (_req, file, cb) => {
-    cb(null, `${Date.now()}-${file.originalname}`);
-  },
-});
+const storage = memoryStorage();
 
 const upload = multer({
-  storage: storageEngine,
+  storage,
   limits: { fileSize: 10000000 },
   fileFilter,
 });

@@ -35,7 +35,8 @@ export const getById = async (id: string, userId?: number) => {
   return file;
 };
 
-export const create = async (file: Express.Multer.File, body: { private: boolean }, userId?: number) => {
-  const newFile = await CFile.create({ userId, name: file.filename, private: body.private });
+export const create = async (body: { private: boolean; originalName: string; s3Key: string }, userId?: number) => {
+  const newFile = await CFile.create({ userId, name: body.originalName, s3Key: body.s3Key, private: body.private });
+  delete newFile.dataValues['s3Key'];
   return newFile;
 };

@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { getAll, getById, create, destroy } from '../services/user.service';
-import { CRequest } from 'src/types/CRequest';
+import { CRequest } from '../types/CRequest';
 
 export async function getUsers(_req: CRequest, res: Response, next: NextFunction) {
   try {

@@ -1,8 +1,9 @@
 import { Response, NextFunction } from 'express';
 import { verify } from 'jsonwebtoken';
 import { getById } from '../services/user.service';
-import { CRequest, JwtUser } from 'src/types/CRequest';
+import { CRequest, JwtUser } from '../types/CRequest';
 import Role from '../types/Role';
+import { SECRET } from '../configs/env.conf';
 
 export const validateToken = (allowGuests = false) => {
   return (req: CRequest, _res: Response, next: NextFunction) => {
@@ -16,7 +17,7 @@ export const validateToken = (allowGuests = false) => {
         return next({ message: 'Unauthorized', code: 401 });
       }
     } else {
-      verify(token, process.env.SECRET, (err, user: JwtUser) => {
+      verify(token, SECRET, (err, user: JwtUser) => {
         if (err) {
           return next({ message: 'Unauthorized', code: 401 });
         } else {

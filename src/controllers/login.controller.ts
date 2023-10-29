@@ -2,8 +2,8 @@ import { Request, Response, NextFunction } from 'express';
 import { sign } from 'jsonwebtoken';
 import { compare } from 'bcrypt';
 import { getByEmail } from '../services/login.service';
-import { JWT_EXPIRES_IN } from '../configs/env.conf';
-import { JwtUser } from 'src/types/CRequest';
+import { JWT_EXPIRES_IN, SECRET } from '../configs/env.conf';
+import { JwtUser } from '../types/CRequest';
 
 export async function postCredentials(req: Request, res: Response, next: NextFunction) {
   try {
@@ -20,7 +20,7 @@ export async function postCredentials(req: Request, res: Response, next: NextFun
       id: user.id,
     };
 
-    const token = sign(userForToken, process.env.SECRET, { expiresIn: JWT_EXPIRES_IN });
+    const token = sign(userForToken, SECRET, { expiresIn: JWT_EXPIRES_IN });
 
     res.status(200).send({
       token,
