@@ -6,7 +6,7 @@ Server for managing albums of images (WIP). Database uses PostgreSQL and images 
 - DATABASE_URL
 - AWS_BUCKET_NAME
 - AWS_BUCKET_REGION
-- AWS_ACCESS_KEY
-- AWS_SECRET_KEY
+- AWS_ACCESS_KEY_ID
+- AWS_SECRET_ACCESS_KEY
 - SECRET
 - JWT_EXPIRES_IN
