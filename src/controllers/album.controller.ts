@@ -66,12 +66,12 @@ export async function postAlbumFiles(req: CRequest, res: Response, next: NextFun
       throw { message: 'Forbidden', code: 403 };
     }
     const files = await getAllFiles(
-      { userId: req.user?.id.toString(), private: album.private ? undefined : 'false' },
+      { userId: req.user?.id, private: album.private ? undefined : 'false' },
       req.user?.id,
       false
     );
     // Create relations
-    const albumFiles = req.body.fileIds?.reduce((filtered: { albumId: string; fileId: number }[], fileId: number) => {
+    const albumFiles = req.body.fileIds?.reduce((filtered: { albumId: string; fileId: string }[], fileId: string) => {
       if (files.find((file: CFile) => file.id === fileId)) {
         filtered.push({ albumId: req.params.id, fileId });
       }

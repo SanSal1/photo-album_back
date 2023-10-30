@@ -2,20 +2,20 @@ import { Model, DataTypes } from 'sequelize';
 import { sequelize } from '../services/db.service';
 
 class CFile extends Model {
-  declare id: number;
+  declare id: string;
   declare name: string;
   declare storageKey: string;
   declare private: boolean;
-  declare userId: number;
+  declare userId: string;
   declare url?: string;
 }
 
 CFile.init(
   {
     id: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4,
       primaryKey: true,
-      autoIncrement: true,
     },
     name: {
       type: DataTypes.STRING,
@@ -31,7 +31,7 @@ CFile.init(
       allowNull: false,
     },
     userId: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.UUID,
       allowNull: false,
       references: { model: 'users', key: 'id' },
     },

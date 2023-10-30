@@ -25,7 +25,7 @@ export async function getProfile(req: CRequest, res: Response, next: NextFunctio
     if (!req.user) {
       throw { message: `Unauthorized`, code: 401 };
     }
-    const user = await getById(req.user.id.toString());
+    const user = await getById(req.user.id);
     res.status(200).json(user);
   } catch (err) {
     next(err);
@@ -46,7 +46,7 @@ export async function deleteUser(req: CRequest, res: Response, next: NextFunctio
     if (!req.user) {
       throw { message: `Unauthorized`, code: 401 };
     }
-    if (req.user.id.toString() === req.params.id) {
+    if (req.user.id === req.params.id) {
       throw { message: `Cannot delete own user`, code: 403 };
     }
     const success = await destroy(req.params.id);

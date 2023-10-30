@@ -2,18 +2,18 @@ import { Model, DataTypes } from 'sequelize';
 import { sequelize } from '../services/db.service';
 
 class Album extends Model {
-  declare id: number;
+  declare id: string;
   declare name: string;
   declare private: boolean;
-  declare userId: number;
+  declare userId: string;
 }
 
 Album.init(
   {
     id: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4,
       primaryKey: true,
-      autoIncrement: true,
     },
     name: {
       type: DataTypes.STRING,
@@ -24,7 +24,7 @@ Album.init(
       allowNull: false,
     },
     userId: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.UUID,
       allowNull: false,
       references: { model: 'users', key: 'id' },
     },

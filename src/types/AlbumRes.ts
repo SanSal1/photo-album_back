@@ -2,11 +2,11 @@ import { Album } from '../models/db.model';
 
 export interface AlbumRes extends Omit<Album, 'userId'> {
   user: {
-    id: number;
+    id: string;
     name: string;
   };
   files: {
-    id: number;
+    id: string;
     name: string;
     private: boolean;
   }[];

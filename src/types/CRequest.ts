@@ -1,7 +1,7 @@
 import { Request } from 'express';
 
 export interface JwtUser {
-  id: number;
+  id: string;
 }
 
 export interface CRequest extends Request {

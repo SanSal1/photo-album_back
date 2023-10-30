@@ -33,7 +33,7 @@ export const isAdmin = async (req: CRequest, _res: Response, next: NextFunction)
   if (!req.user) {
     return next({ message: 'Unauthorized', code: 401 });
   }
-  const user = await getById(req.user.id.toString());
+  const user = await getById(req.user.id);
   if (user.role !== Role.Admin) {
     return next({ message: 'Unauthorized', code: 401 });
   } else {

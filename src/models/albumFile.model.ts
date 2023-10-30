@@ -2,25 +2,25 @@ import { Model, DataTypes } from 'sequelize';
 import { sequelize } from '../services/db.service';
 
 class AlbumFile extends Model {
-  declare id: number;
-  declare albumId: number;
-  declare fileId: number;
+  declare id: string;
+  declare albumId: string;
+  declare fileId: string;
 }
 
 AlbumFile.init(
   {
     id: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4,
       primaryKey: true,
-      autoIncrement: true,
     },
     albumId: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.UUID,
       allowNull: false,
       references: { model: 'albums', key: 'id' },
     },
     fileId: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.UUID,
       allowNull: false,
       references: { model: 'files', key: 'id' },
     },

@@ -3,7 +3,7 @@ import { sequelize } from '../services/db.service';
 import Role from '../types/Role';
 
 class User extends Model {
-  declare id: number;
+  declare id: string;
   declare name: string;
   declare email: string;
   declare password: string;
@@ -13,9 +13,9 @@ class User extends Model {
 User.init(
   {
     id: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4,
       primaryKey: true,
-      autoIncrement: true,
     },
     name: {
       type: DataTypes.STRING,
